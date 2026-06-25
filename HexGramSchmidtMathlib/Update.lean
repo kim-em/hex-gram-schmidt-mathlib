@@ -102,27 +102,8 @@ private theorem rowSwap_row_eq_of_ne_int {n' m' : Nat}
     · exact absurd hri' hri
     · simp [hri', hrj']
 
-private theorem rowSwap_row_left_int {n' m' : Nat}
-    (b : Matrix Int n' m') (i j : Fin n') :
-    (Matrix.rowSwap b i j)[i] = b[j] := by
-  apply Vector.ext
-  intro idx hidx
-  let c : Fin m' := ⟨idx, hidx⟩
-  change (Matrix.rowSwap b i j)[i][c] = b[j][c]
-  rw [Matrix.rowSwap_getElem]
-  by_cases hij : i = j
-  · simp [hij]
-  · simp [hij]
-
-private theorem rowSwap_row_right_int {n' m' : Nat}
-    (b : Matrix Int n' m') (i j : Fin n') :
-    (Matrix.rowSwap b i j)[j] = b[i] := by
-  apply Vector.ext
-  intro idx hidx
-  let c : Fin m' := ⟨idx, hidx⟩
-  change (Matrix.rowSwap b i j)[j][c] = b[i][c]
-  rw [Matrix.rowSwap_getElem]
-  simp
+-- `rowSwap_row_left_int` and `rowSwap_row_right_int` are provided publicly by
+-- `HexGramSchmidt.Int`; the duplicate copies that lived here were removed.
 
 /-- When the swap indices `km1, k` both lie outside the leading `t`-prefix
 (`t ≤ km1.val`), the leading Gram matrix is unchanged by the row swap. -/
