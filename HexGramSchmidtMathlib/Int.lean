@@ -335,7 +335,7 @@ private theorem dot_prefixCombination_right_rat
 
 /-- Dot product against a `prefixCombination` is zero when the right vector is
 orthogonal to every contributing basis row. -/
-private theorem dot_prefixCombination_right_eq_zero_of_dot_zero
+private theorem dot_prefixCombination_right_eq_zero
     (coeffs : Matrix Rat n n) (basisM : Matrix Rat n m)
     (i : Nat) (hi : i < n) (u : Vector Rat m)
     (h : ∀ (j : Fin i),
@@ -481,7 +481,7 @@ private theorem dot_rowCombination_right_rat
 
 /-- Dotting the projection with an original prefix row is the corresponding
 linear combination of original Gram-matrix entries. -/
-private theorem originalProjectionCoords_dot_eq_gram_combination
+private theorem originalProjectionCoords_dot_eq
     (b : Matrix Int n m) (i j : Nat) (hi : i < n) (hj : j < n)
     (p : Fin (j + 1)) :
     Matrix.dot
@@ -546,7 +546,7 @@ private theorem auxMatrix_zero_above (b : Matrix Int n m) (k : Nat) (hk : k ≤ 
   have hprefix :
       Matrix.dot ((basis b).row ⟨j.val, hj'⟩)
           (GramSchmidt.prefixCombination (coeffs b) (basis b) i.val hi') = 0 := by
-    apply dot_prefixCombination_right_eq_zero_of_dot_zero
+    apply dot_prefixCombination_right_eq_zero
       (coeffs := coeffs b) (basisM := basis b) (i := i.val) (hi := hi')
       (u := (basis b).row ⟨j.val, hj'⟩)
     intro p
@@ -573,7 +573,7 @@ private theorem auxMatrix_diag (b : Matrix Int n m) (k : Nat) (hk : k ≤ n)
   have hprefix :
       Matrix.dot ((basis b).row ⟨i.val, hi'⟩)
           (GramSchmidt.prefixCombination (coeffs b) (basis b) i.val hi') = 0 := by
-    apply dot_prefixCombination_right_eq_zero_of_dot_zero
+    apply dot_prefixCombination_right_eq_zero
       (coeffs := coeffs b) (basisM := basis b) (i := i.val) (hi := hi')
       (u := (basis b).row ⟨i.val, hi'⟩)
     intro p
@@ -875,7 +875,7 @@ private theorem dot_castIntRow_eq_cast_dot
 /-- The original-row coordinates chosen for the Gram-Schmidt prefix projection
 solve the leading Gram linear system whose right-hand side is obtained by
 dotting prefix rows with that projection. This is the matrix/vector form of
-`originalProjectionCoords_dot_eq_gram_combination`; the downstream Cramer
+`originalProjectionCoords_dot_eq`; the downstream Cramer
 identification rewrites the right-hand side to the replacement Gram column. -/
 private theorem scaledCoeffMatrix_replacementColumn_solve
     (b : Matrix Int n m) (i j : Nat) (hi : i < n) (hj : j < i)
@@ -890,7 +890,7 @@ private theorem scaledCoeffMatrix_replacementColumn_solve
               (Nat.succ_le_of_lt (Nat.lt_trans hj hi))⟩)
           (basisPrefixProjection b i j hi (Nat.lt_trans hj hi)) := by
   have hsys :=
-    originalProjectionCoords_dot_eq_gram_combination
+    originalProjectionCoords_dot_eq
       (b := b) (i := i) (j := j) (hi := hi)
       (hj := Nat.lt_trans hj hi) p
   change
@@ -1097,7 +1097,7 @@ private theorem dot_castIntRow_basis_eq_zero_of_lt
     basis_orthogonal b r p hr hp (Nat.ne_of_gt hpr)
   have hprefix : Matrix.dot ((basis b).row ⟨r, hr⟩)
       (GramSchmidt.prefixCombination (coeffs b) (basis b) p hp) = 0 := by
-    apply dot_prefixCombination_right_eq_zero_of_dot_zero
+    apply dot_prefixCombination_right_eq_zero
       (coeffs := coeffs b) (basisM := basis b) (i := p) (hi := hp)
       (u := (basis b).row ⟨r, hr⟩)
     intro p'
@@ -1149,7 +1149,7 @@ private theorem foldl_finRange_truncate_zero_above
 `0, ..., j` agrees with `castIntRow b i` when dotted with `castIntRow b p` for
 any `p ≤ j < i`. The residue between the two lies in the span of basis vectors
 of indices `> j`, hence orthogonal to `castIntRow b p`. -/
-private theorem dot_castIntRow_castIntRow_eq_dot_basisPrefixProjection
+private theorem dot_castIntRow_castIntRow_eq
     (b : Matrix Int n m) (i j p : Nat) (hi : i < n) (hj : j < i)
     (hp_le_j : p ≤ j) (hp : p < n) :
     Matrix.dot (castIntRow b ⟨p, hp⟩) (castIntRow b ⟨i, hi⟩) =
@@ -1230,7 +1230,7 @@ private theorem dot_basisPrefixProjection_eq_castIntGram
       (Nat.succ_le_of_lt (Nat.lt_trans hj hi))⟩ : Fin n)
     (⟨i, hi⟩ : Fin n)]
   exact
-    (dot_castIntRow_castIntRow_eq_dot_basisPrefixProjection
+    (dot_castIntRow_castIntRow_eq
       b i j p.val hi hj (Nat.le_of_lt_succ p.isLt)
       (Nat.lt_of_lt_of_le p.isLt
         (Nat.succ_le_of_lt (Nat.lt_trans hj hi)))).symm
@@ -1344,7 +1344,7 @@ private theorem dot_basis_basisPrefixProjection_eq_origProjCoords_mul_normSq
     have hprefix :
         Matrix.dot ((basis b).row ⟨j, hjlt⟩)
             (GramSchmidt.prefixCombination (coeffs b) (basis b) j hjlt) = 0 := by
-      apply dot_prefixCombination_right_eq_zero_of_dot_zero
+      apply dot_prefixCombination_right_eq_zero
         (coeffs := coeffs b) (basisM := basis b) (i := j) (hi := hjlt)
         (u := (basis b).row ⟨j, hjlt⟩)
       intro r
@@ -1461,7 +1461,7 @@ private theorem scaledCoeffMatrix_det_eq_gramDet_mul_coeffs
                 (GramSchmidt.leadingGramMatrixInt b (j + 1) hjsuc))[p][q]) 0) := by
     funext p
     -- dot castIntRow b p castIntRow b i = dot castIntRow b p basisPrefixProjection
-    rw [dot_castIntRow_castIntRow_eq_dot_basisPrefixProjection b i j p.val hi hj
+    rw [dot_castIntRow_castIntRow_eq b i j p.val hi hj
       (Nat.le_of_lt_succ p.isLt) (Nat.lt_of_lt_of_le p.isLt hjsuc)]
     -- = (castG * originalProjectionCoords)[p]
     rw [← scaledCoeffMatrix_replacementColumn_solve b i j hi hj p]
@@ -2162,7 +2162,7 @@ theorem bareissGramCanonicalCoeff_eq_borderedMinor_aug
 /-- Under a non-singular no-pivot Bareiss prefix that has not yet reached the
 terminal step, the loop on the initial state of `M` consumed exactly `fuel`
 regular iterations: the resulting step equals `fuel`, and `fuel + 1 ≤ n'`. -/
-private theorem noPivotLoop_initial_step_eq_and_fuel_succ_le_of_no_sing
+private theorem noPivotLoop_initial_step_eq_and_fuel_succ_le
     {n' : Nat} (M : Hex.Matrix Int n' n') (fuel : Nat)
     (h_no_sing :
       (Matrix.noPivotLoop fuel (Matrix.noPivotInitialState M)).singularStep = none)
@@ -2228,7 +2228,7 @@ def StepWitness.ofGram (b : Matrix Int n m) :
   set state := Matrix.noPivotLoop fuel
     (Matrix.noPivotInitialState (Matrix.gramMatrix b)) with hstate
   obtain ⟨h_step_eq_fuel, hfuel_n_le⟩ :=
-    noPivotLoop_initial_step_eq_and_fuel_succ_le_of_no_sing (Matrix.gramMatrix b)
+    noPivotLoop_initial_step_eq_and_fuel_succ_le (Matrix.gramMatrix b)
       fuel h_prefix_none hnext
   have hfuel_lt_n : fuel < n := by omega
   have hfuel_lt_naug : fuel < n + 1 := by omega
@@ -2968,7 +2968,7 @@ theorem dot_basis_rowSwap_curr_prev_eq_normSq
   have hpfx_b_zero :
       Matrix.dot ((basis (Matrix.rowSwap b km1 k)).row k)
           (GramSchmidt.prefixCombination (coeffs b) (basis b) km1.val km1.isLt) = 0 := by
-    apply dot_prefixCombination_right_eq_zero_of_dot_zero
+    apply dot_prefixCombination_right_eq_zero
     intro q
     have hq_lt_km1 : q.val < km1.val := q.isLt
     have hq_lt_k : q.val < k.val := by omega
@@ -2984,7 +2984,7 @@ theorem dot_basis_rowSwap_curr_prev_eq_normSq
       Matrix.dot ((basis (Matrix.rowSwap b km1 k)).row k)
           (GramSchmidt.prefixCombination (coeffs (Matrix.rowSwap b km1 k))
             (basis (Matrix.rowSwap b km1 k)) k.val k.isLt) = 0 := by
-    apply dot_prefixCombination_right_eq_zero_of_dot_zero
+    apply dot_prefixCombination_right_eq_zero
     intro q
     have hq_lt_k : q.val < k.val := q.isLt
     have hq_lt_n : q.val < n := Nat.lt_trans q.isLt k.isLt
@@ -4100,7 +4100,7 @@ corner: when the no-pivot Bareiss state has `step = k` for a free variable `k`,
 its `(k, k)` matrix entry equals the determinant of the `(k + 1)`-leading
 prefix of the source matrix. Stated with `k` as a free variable so that
 `subst` can replace the let-bound projection with a fresh name. -/
-private theorem bareissNoPivotInvariant_diag_eq_leadingPrefix_det
+private theorem bareissNoPivotInvariant_diag_eq
     {n : Nat} (M : Matrix Int n n) (state : Matrix.BareissState n) (k : Nat)
     (hinv : HexMatrixMathlib.BareissNoPivotInvariant M state)
     (hsk : k = state.step) (hk : k < n) :
@@ -4120,7 +4120,7 @@ private theorem bareissNoPivotInvariant_diag_eq_leadingPrefix_det
 no-pivot Bareiss pass that records a singular step at index `s`, the
 `(s+1)`-leading prefix of the source matrix has zero determinant (Hex's
 `Matrix.det`). -/
-private theorem leadingPrefix_det_eq_zero_of_noPivotLoop_singularStep
+private theorem leadingPrefix_det_eq_zero
     {n : Nat} (M : Matrix Int n n) (fuel s : Nat) (hs : s + 1 ≤ n)
     (h_sing : (Matrix.noPivotLoop fuel
         (Matrix.noPivotInitialState M)).singularStep = some s) :
@@ -4140,7 +4140,7 @@ private theorem leadingPrefix_det_eq_zero_of_noPivotLoop_singularStep
   have h_diag_eq_lp :
       (Matrix.noPivotLoop s (Matrix.noPivotInitialState M)).matrix[(⟨s, Nat.lt_of_succ_le hs⟩ : Fin n)][(⟨s, Nat.lt_of_succ_le hs⟩ : Fin n)] =
         Matrix.det (Matrix.leadingPrefix M (s + 1) (Nat.succ_le_of_lt (Nat.lt_of_succ_le hs))) :=
-    bareissNoPivotInvariant_diag_eq_leadingPrefix_det
+    bareissNoPivotInvariant_diag_eq
       M (Matrix.noPivotLoop s (Matrix.noPivotInitialState M)) s hinv_S
       h_step.symm (Nat.lt_of_succ_le hs)
   rw [h_zero] at h_diag_eq_lp
@@ -4199,7 +4199,7 @@ theorem leadingPrefix_gram_bareiss_eq_zero_of_singularStep_lt
   -- Step B: derive det(leadingPrefix (gramMatrix b) (s+1)) = 0 via the new lemma.
   have h_det_s1_zero :
       Matrix.det (Matrix.leadingPrefix (Matrix.gramMatrix b) (s + 1) hs1) = 0 :=
-    leadingPrefix_det_eq_zero_of_noPivotLoop_singularStep
+    leadingPrefix_det_eq_zero
       (Matrix.gramMatrix b) r s hs1 h_sing
   -- Step C: convert to gramSchmidtNormProduct b (s+1) = 0.
   have h_lead_eq_s :
