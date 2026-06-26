@@ -1,5 +1,9 @@
-import HexGramSchmidtMathlib.Int
-import HexGramSchmidt.Update
+module
+
+public import HexGramSchmidtMathlib.Int
+public import HexGramSchmidt.Update
+
+public section
 
 /-!
 Mathlib-side row-operation update theorems for `hex-gram-schmidt`.

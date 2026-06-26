@@ -1,5 +1,9 @@
-import HexGramSchmidt.Basic
-import Mathlib.Analysis.InnerProductSpace.GramSchmidtOrtho
+module
+
+public import HexGramSchmidt.Basic
+public import Mathlib.Analysis.InnerProductSpace.GramSchmidtOrtho
+
+public section
 
 /-!
 Mathlib-side correspondence lemmas for `hex-gram-schmidt`.
@@ -15,6 +19,7 @@ namespace GramSchmidtMathlib
 
 /-- View a rational dense row as a vector in Mathlib's standard Euclidean
 space on `Fin m`. -/
+@[expose]
 def rowToEuclidean (row : Vector Rat m) : EuclideanSpace ℝ (Fin m) :=
   WithLp.toLp 2 (fun j : Fin m => (row[j] : ℝ))
 
@@ -56,14 +61,17 @@ theorem rowToEuclidean_smul (c : Rat) (row : Vector Rat m) :
   simp [rowToEuclidean]
 
 /-- Cast an integer dense matrix into the rational matrix space of `HexGramSchmidt`. -/
+@[expose]
 def castIntMatrix (b : Matrix Int n m) : Matrix Rat n m :=
   Vector.map (fun row => Vector.map (fun x : Int => (x : Rat)) row) b
 
 /-- The row family fed to Mathlib's `gramSchmidt` for a rational matrix. -/
+@[expose]
 def ratRowFamily (b : Matrix Rat n m) : Fin n → EuclideanSpace ℝ (Fin m) :=
   fun i => rowToEuclidean (b.row i)
 
 /-- The row family fed to Mathlib's `gramSchmidt` for an integer matrix. -/
+@[expose]
 def intRowFamily (b : Matrix Int n m) : Fin n → EuclideanSpace ℝ (Fin m) :=
   ratRowFamily (castIntMatrix b)
 

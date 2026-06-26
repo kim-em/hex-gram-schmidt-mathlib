@@ -1,5 +1,9 @@
-import HexGramSchmidt.Int
-import HexMatrixMathlib.Determinant
+module
+
+public import HexGramSchmidt.Int
+public import HexMatrixMathlib.Determinant
+
+public section
 
 /-!
 Mathlib-side identification of the executable Cramer-style scaled coefficient
@@ -1624,6 +1628,7 @@ column at upper rows tracks `bareissGramCanonicalCoeff b fuel i` at slot `a`.
 `bareissGramCanonicalCoeff b fuel i [a]` with a trailing-column entry of the
 no-pivot Bareiss pass.  Upper block is `gramMatrix b`; trailing column at
 upper rows is the standard basis vector `δ_a`; trailing row is zero. -/
+@[expose]
 def augmentedGram (b : Matrix Int n m) (a : Fin n) :
     Hex.Matrix Int (n + 1) (n + 1) :=
   Matrix.ofFn fun i j : Fin (n + 1) =>
@@ -1678,7 +1683,7 @@ private theorem matrix_entry_eq_of_eq {n m : Nat} (M : Hex.Matrix Int n m)
 re-state `BareissNoPivotInvariant.trailing_eq` with the step value supplied
 externally so the dependent bordered-minor type matches the desired
 `s = state.step` substitution cleanly. -/
-private theorem trailing_eq_at_step_local
+theorem trailing_eq_at_step_local
     {n' : Nat} {M : Hex.Matrix Int n' n'} {state : Matrix.BareissState n'}
     (hinv : HexMatrixMathlib.BareissNoPivotInvariant M state)
     (s : Nat) (hs : s < n') (hstep : s = state.step)
@@ -1715,7 +1720,7 @@ augmented matrix to the trajectory on `gramMatrix b`.  Under `fuel + 1 ≤ n`
 and a non-singular prefix on the Gram side, the augmented loop tracks the
 Gram loop on (i) `step`, (ii) `prevPivot`, (iii) the upper `n × n` block,
 and (iv) carries the canonical row coefficient in its trailing column. -/
-private theorem noPivotLoop_augmentedGram_invariant
+theorem noPivotLoop_augmentedGram_invariant
     (b : Matrix Int n m) (a : Fin n) (fuel : Nat) :
     fuel + 1 ≤ n →
       (Matrix.noPivotLoop fuel
@@ -2162,7 +2167,7 @@ theorem bareissGramCanonicalCoeff_eq_borderedMinor_aug
 /-- Under a non-singular no-pivot Bareiss prefix that has not yet reached the
 terminal step, the loop on the initial state of `M` consumed exactly `fuel`
 regular iterations: the resulting step equals `fuel`, and `fuel + 1 ≤ n'`. -/
-private theorem noPivotLoop_initial_step_eq_and_fuel_succ_le
+theorem noPivotLoop_initial_step_eq_and_fuel_succ_le
     {n' : Nat} (M : Hex.Matrix Int n' n') (fuel : Nat)
     (h_no_sing :
       (Matrix.noPivotLoop fuel (Matrix.noPivotInitialState M)).singularStep = none)
@@ -2203,7 +2208,7 @@ private theorem noPivotLoop_initial_step_eq_and_fuel_succ_le
 `BareissNoPivotInvariant.prevPivot_eq` with the step value supplied externally
 so the dependent `leadingPrefix` type matches the desired `s = state.step`
 substitution cleanly. -/
-private theorem prevPivot_eq_at_step_local
+theorem prevPivot_eq_at_step_local
     {n' : Nat} {M : Hex.Matrix Int n' n'} {state : Matrix.BareissState n'}
     (hinv : HexMatrixMathlib.BareissNoPivotInvariant M state)
     (s : Nat) (hs : s ≤ n') (hstep : s = state.step) :
@@ -2221,6 +2226,7 @@ coefficients identify with trailing-column entries of the augmented no-pivot
 Bareiss pass (`bareissGramCanonicalCoeff_eq_borderedMinor_aug`), and the
 Bareiss step recurrence on the augmented matrix supplies the exact-division
 multiplicative identity. -/
+@[expose]
 def StepWitness.ofGram (b : Matrix Int n m) :
     Hex.GramSchmidt.Int.StepWitness b := by
   intro fuel hinv h_canon h_prefix_none hnext hp i hi

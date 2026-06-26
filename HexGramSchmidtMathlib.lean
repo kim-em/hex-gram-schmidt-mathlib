@@ -1,6 +1,10 @@
-import HexGramSchmidtMathlib.Basic
-import HexGramSchmidtMathlib.Int
-import HexGramSchmidtMathlib.Update
+module
+
+public import HexGramSchmidtMathlib.Basic
+public import HexGramSchmidtMathlib.Int
+public import HexGramSchmidtMathlib.Update
+
+public section
 
 /-!
 The `HexGramSchmidtMathlib` library states the rowwise correspondence between
