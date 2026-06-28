@@ -6,17 +6,17 @@ defaultTargets = ["HexGramSchmidtMathlib"]
 [[require]]
 name = "HexGramSchmidt"
 git = "https://github.com/kim-em/hex-gram-schmidt.git"
-rev = "64a1e93d1f5149f86660b1a4e1da4158193c7ba4"
+rev = "2d77ad831338136fecdcae1af67d5f54ece34ea2"
 
 [[require]]
 name = "HexMatrixMathlib"
 git = "https://github.com/kim-em/hex-matrix-mathlib.git"
-rev = "32f9f7d7f3ee03052caa65e19a6b4cd4439a7115"
+rev = "2e512869ac944e3e7a5f4bf34c7a14c57504e018"
 
 [[require]]
 name = "HexMatrix"
 git = "https://github.com/kim-em/hex-matrix.git"
-rev = "0b7d7242225e73bda36ea0d58ccdc526363ae4c1"
+rev = "2035afb6435c35a22f5c3aff77b706f554afd616"
 
 [[require]]
 name = "mathlib"
