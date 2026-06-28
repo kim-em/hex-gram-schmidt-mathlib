@@ -1,9 +1,30 @@
+/-
+Copyright (c) 2026 Lean FRO, LLC. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Kim Morrison
+-/
+
 module
 
 public import HexGramSchmidt.Int
 public import HexMatrixMathlib.Determinant
 
 public section
+
+/-!
+Mathlib-side determinantal theory for the integer Gram-Schmidt surface of
+`hex-gram-schmidt`.
+
+This module relates the executable leading integer Gram determinant `gramDet`
+to products of squared norms of the orthogonal Gram-Schmidt basis rows.  Its
+spine is a rational column-operation reduction from `leadingGramMatrixInt`
+(via the interpolating `progressMatrix`, the triangular `auxMatrix`, and the
+`Int → Rat` cast law `det_intCast`) to the diagonal norm-squared matrix,
+giving `gramDet_succ_rat` and `leadingGramMatrixInt_det_nonneg`.  Along the
+way it builds the Cramer machinery (`scaledCoeffMatrix` solved through the
+chosen `originalProjectionCoords`) that the sibling module uses to read off
+the Gram-Schmidt coefficients `coeffs`.
+-/
 
 namespace Hex
 namespace GramSchmidt
